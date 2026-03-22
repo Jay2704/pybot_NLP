@@ -25,11 +25,9 @@ _BACKEND_DIR = Path(__file__).resolve().parent.parent
 if str(_BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(_BACKEND_DIR))
 
-from app.services.retriever import getAnswerWithHighestScore
+from app.paths import ARTIFACTS_DIR, DATA_DIR, REPO_ROOT
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
-ARTIFACTS_DIR = REPO_ROOT / "backend" / "artifacts"
-DATA_DIR = REPO_ROOT / "backend" / "data"
+from app.services.retriever import getAnswerWithHighestScore
 
 TEXT_TRUNCATE = 150
 
@@ -47,7 +45,10 @@ def _find_vectorizer_path() -> Path:
     p = ARTIFACTS_DIR / "vectorizer.pkl"
     if p.is_file():
         return p
-    raise FileNotFoundError(f"vectorizer.pkl not found under {ARTIFACTS_DIR}")
+    raise FileNotFoundError(
+        f"vectorizer.pkl not found. Expected: {p}\n"
+        f"  (artifacts dir exists: {ARTIFACTS_DIR.is_dir()}, path: {ARTIFACTS_DIR})"
+    )
 
 
 def _find_question_vectors_path() -> Path:
@@ -62,7 +63,9 @@ def _find_question_vectors_path() -> Path:
             if "vector" in low or "matrix" in low or "tfidf" in low:
                 return p
     raise FileNotFoundError(
-        f"No question_vectors (or similar) .pkl found under {ARTIFACTS_DIR}"
+        f"No question_vectors (or similar) .pkl found under {ARTIFACTS_DIR} "
+        f"(exists: {ARTIFACTS_DIR.is_dir()})\n"
+        "  Run: backend/scripts/build_retrieval_artifacts.py"
     )
 
 
@@ -78,7 +81,10 @@ def _find_dataset_path() -> Path:
         if csvs:
             return csvs[0]
     raise FileNotFoundError(
-        f"No chatbot_df.pkl or dataset .csv found under {ARTIFACTS_DIR} or {DATA_DIR}"
+        f"No chatbot_df.pkl or dataset .csv found.\n"
+        f"  artifacts: {ARTIFACTS_DIR} (exists: {ARTIFACTS_DIR.is_dir()})\n"
+        f"  data:      {DATA_DIR} (exists: {DATA_DIR.is_dir()})\n"
+        "  Run the build pipeline under backend/scripts/ first."
     )
 
 
@@ -118,7 +124,7 @@ def _run_one_query(
         row = int(closest[0])
 
         matched_question = df.iloc[row]["Question"]
-        qid = df.iloc[row][0]
+        qid = df.iloc[row, 0]
         answers = df.loc[df["QId"] == qid]
         triple = getAnswerWithHighestScore(answers, df)
         answer_text = triple[0]
@@ -129,7 +135,10 @@ def _run_one_query(
 
 
 def main() -> int:
-    print(f"Repo root: {REPO_ROOT}")
+    print(f"This script: {Path(__file__).resolve()}")
+    print(f"Repo root:   {_REPO_ROOT}")
+    print(f"Data dir:    {DATA_DIR}")
+    print(f"Artifacts:   {ARTIFACTS_DIR}")
     print("Full pipeline simulation (dataset + vectorizer + question_vectors)\n")
 
     try:

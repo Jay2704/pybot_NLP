@@ -11,10 +11,11 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-# backend/debug/check_files.py -> parents[2] = repo root
-REPO_ROOT = Path(__file__).resolve().parents[2]
-ARTIFACTS_DIR = REPO_ROOT / "backend" / "artifacts"
-DATA_DIR = REPO_ROOT / "backend" / "data"
+_BACKEND_DIR = Path(__file__).resolve().parent.parent
+if str(_BACKEND_DIR) not in sys.path:
+    sys.path.insert(0, str(_BACKEND_DIR))
+
+from app.paths import ARTIFACTS_DIR, DATA_DIR, REPO_ROOT
 
 SCAN_TARGETS = [
     ("artifacts", ARTIFACTS_DIR),
@@ -92,7 +93,10 @@ def _summary_line(paths: list[Path]) -> str:
 
 
 def main() -> int:
-    print(f"Repo root: {REPO_ROOT}")
+    print(f"This script: {Path(__file__).resolve()}")
+    print(f"Repo root:   {_REPO_ROOT}")
+    print(f"Data dir:    {DATA_DIR}")
+    print(f"Artifacts:   {ARTIFACTS_DIR}")
     print("Scanning (read-only): backend/artifacts/, backend/data/\n")
 
     all_files: list[Path] = []
@@ -100,10 +104,12 @@ def main() -> int:
     for label, directory in SCAN_TARGETS:
         print(f"=== {label}: {directory} ===")
         if not directory.exists():
-            print("  (folder missing — skipped)\n")
+            print(
+                f"  (folder missing — create it or run the build pipeline; expected: {directory})\n"
+            )
             continue
         if not directory.is_dir():
-            print("  (not a directory — skipped)\n")
+            print(f"  (not a directory — skipped: {directory})\n")
             continue
 
         found = _collect_files(directory)

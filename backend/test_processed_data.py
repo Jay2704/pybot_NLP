@@ -13,10 +13,14 @@ from pathlib import Path
 import joblib
 import pandas as pd
 
-# backend/test_processed_data.py -> parents[1] = repo root
-REPO_ROOT = Path(__file__).resolve().parents[1]
-CHATBOT_DF_PKL = REPO_ROOT / "backend" / "artifacts" / "chatbot_df.pkl"
-FINAL_CSV = REPO_ROOT / "backend" / "data" / "final_chatbot_data.csv"
+_BACKEND_DIR = Path(__file__).resolve().parent
+if str(_BACKEND_DIR) not in sys.path:
+    sys.path.insert(0, str(_BACKEND_DIR))
+
+from app.paths import ARTIFACTS_DIR, DATA_DIR, REPO_ROOT
+
+CHATBOT_DF_PKL = ARTIFACTS_DIR / "chatbot_df.pkl"
+FINAL_CSV = DATA_DIR / "final_chatbot_data.csv"
 
 REQUIRED_COLUMNS = [
     "QId",

@@ -4,6 +4,11 @@ Build final_chatbot_data.csv from Questions.csv and AnswersV2.csv.
 
 Parity with Chatbot-V5.ipynb: same reads, renames, filter, merge, drops, renames,
 and BeautifulSoup HTML stripping (no TF-IDF / UI).
+
+Default inputs: Questions.csv from repo pybot_data/, AnswersV2.csv from backend/data/.
+Default output: backend/data/final_chatbot_data.csv
+
+Paths resolve from this script file location (not the process working directory).
 """
 
 from __future__ import annotations
@@ -16,13 +21,16 @@ from pathlib import Path
 import pandas as pd
 from bs4 import BeautifulSoup
 
-# --- Path configuration (defaults; override via CLI) ---------------------------------
-REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_INPUT_DIR = REPO_ROOT / "pybot_data"
-DEFAULT_OUTPUT_PATH = REPO_ROOT / "backend" / "data" / "final_chatbot_data.csv"
+_BACKEND_DIR = Path(__file__).resolve().parent.parent
+if str(_BACKEND_DIR) not in sys.path:
+    sys.path.insert(0, str(_BACKEND_DIR))
 
-QUESTIONS_FILENAME = "Questions.csv"
-ANSWERS_V2_FILENAME = "AnswersV2.csv"
+from app.paths import DATA_DIR, PYBOT_DATA_DIR, ensure_data_and_artifacts_dirs
+
+DEFAULT_QUESTIONS_PATH = PYBOT_DATA_DIR / "Questions.csv"
+DEFAULT_ANSWERS_V2_PATH = DATA_DIR / "AnswersV2.csv"
+DEFAULT_OUTPUT_PATH = DATA_DIR / "final_chatbot_data.csv"
+
 CSV_ENCODING = "latin-1"
 
 DROP_AFTER_MERGE = [
@@ -128,36 +136,38 @@ def parse_args() -> argparse.Namespace:
         description="Build final_chatbot_data.csv (Chatbot-V5.ipynb data flow).",
     )
     p.add_argument(
-        "--input-dir",
+        "--questions",
         type=Path,
-        default=DEFAULT_INPUT_DIR,
-        help=f"Directory with {QUESTIONS_FILENAME} and {ANSWERS_V2_FILENAME} (default: %(default)s)",
+        default=DEFAULT_QUESTIONS_PATH,
+        help=f"Path to Questions.csv (default: {DEFAULT_QUESTIONS_PATH})",
+    )
+    p.add_argument(
+        "--answers-v2",
+        type=Path,
+        default=DEFAULT_ANSWERS_V2_PATH,
+        help=f"Path to AnswersV2.csv (default: {DEFAULT_ANSWERS_V2_PATH})",
     )
     p.add_argument(
         "--output",
         type=Path,
         default=DEFAULT_OUTPUT_PATH,
-        help=f"Output CSV path (default: %(default)s)",
+        help=f"Output CSV path (default: {DEFAULT_OUTPUT_PATH})",
     )
     return p.parse_args()
 
 
 def main() -> int:
+    ensure_data_and_artifacts_dirs()
     args = parse_args()
-    input_dir = args.input_dir.resolve()
+    questions_path = args.questions.resolve()
+    answers_path = args.answers_v2.resolve()
     output_path = args.output.resolve()
 
-    questions_path = input_dir / QUESTIONS_FILENAME
-    answers_path = input_dir / ANSWERS_V2_FILENAME
-
-    if not input_dir.is_dir():
-        logger.error("Input directory does not exist: %s", input_dir)
-        return 1
     if not questions_path.is_file():
-        logger.error("Missing file: %s", questions_path)
+        print(f"ERROR: Questions.csv not found: {questions_path}", file=sys.stderr)
         return 1
     if not answers_path.is_file():
-        logger.error("Missing file: %s", answers_path)
+        print(f"ERROR: AnswersV2.csv not found: {answers_path}", file=sys.stderr)
         return 1
 
     try:
@@ -165,11 +175,24 @@ def main() -> int:
         an = read_answers_v2(answers_path)
         df = build_final_dataset(q, an)
         save_final(df, output_path)
+    except UnicodeDecodeError as exc:
+        print(f"ERROR: CSV decode failed (expected {CSV_ENCODING!r}): {exc}", file=sys.stderr)
+        return 1
+    except OSError as exc:
+        print(f"ERROR: file read/write failed: {exc}", file=sys.stderr)
+        return 1
+    except ValueError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
     except Exception as exc:
         logger.exception("Build failed: %s", exc)
         return 1
 
-    print(f"Done. Final dataset: {output_path} ({len(df):,} rows)")
+    print(f"input (Questions):  {questions_path}")
+    print(f"input (AnswersV2):  {answers_path}")
+    print(f"output:              {output_path}")
+    print(f"rows:                {len(df):,}")
+    print(f"columns:             {list(df.columns)}")
     return 0
 
 

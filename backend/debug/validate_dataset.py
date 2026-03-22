@@ -14,10 +14,11 @@ from pathlib import Path
 import joblib
 import pandas as pd
 
-# backend/debug/validate_dataset.py -> parents[2] = repo root
-REPO_ROOT = Path(__file__).resolve().parents[2]
-DATA_DIR = REPO_ROOT / "backend" / "data"
-ARTIFACTS_DIR = REPO_ROOT / "backend" / "artifacts"
+_BACKEND_DIR = Path(__file__).resolve().parent.parent
+if str(_BACKEND_DIR) not in sys.path:
+    sys.path.insert(0, str(_BACKEND_DIR))
+
+from app.paths import ARTIFACTS_DIR, DATA_DIR, REPO_ROOT
 
 REQUIRED_COLUMNS = [
     "QId",
@@ -72,10 +73,13 @@ def discover_dataset_path() -> Path:
             return p
 
     raise FileNotFoundError(
-        "No dataset file found. Expected e.g.\n"
+        "No dataset file found. Searched (paths resolved from this script, not cwd):\n"
+        f"  data dir:      {DATA_DIR} (exists: {DATA_DIR.is_dir()})\n"
+        f"  artifacts dir: {ARTIFACTS_DIR} (exists: {ARTIFACTS_DIR.is_dir()})\n"
+        "Prefer:\n"
         f"  {ARTIFACTS_DIR / 'chatbot_df.pkl'}\n"
         f"  {DATA_DIR / 'final_chatbot_data.csv'}\n"
-        "or another .csv under backend/data/ or .pkl under backend/artifacts/ "
+        "or another .csv under backend/data/ or dataset .pkl under backend/artifacts/ "
         "(excluding vectorizer / question_vectors)."
     )
 
@@ -113,7 +117,10 @@ def _empty_text_mask(series: pd.Series) -> pd.Series:
 
 
 def main() -> int:
-    print(f"Repo root: {REPO_ROOT}\n")
+    print(f"This script: {Path(__file__).resolve()}")
+    print(f"Repo root:   {_REPO_ROOT}")
+    print(f"Data dir:    {DATA_DIR}")
+    print(f"Artifacts:   {ARTIFACTS_DIR}\n")
 
     try:
         path = discover_dataset_path()

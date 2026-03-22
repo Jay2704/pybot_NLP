@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 """
-Build AnswersV2.csv from Answers.csv using the same logic as Preprocessing.ipynb.
+Build AnswersV2.csv from Answers.csv (Preprocessing.ipynb logic).
 
-Reads Questions.csv and Answers.csv from a configurable directory (notebook parity:
-only Answers rows are transformed). Output: AnswersV2.csv in the same directory
-unless --output-dir is set.
+Adds columns: latest_score, alternate, date — unchanged from the notebook.
 """
 
 from __future__ import annotations
@@ -16,44 +14,32 @@ from pathlib import Path
 
 import pandas as pd
 
-ANSWERS_FILENAME = "Answers.csv"
-QUESTIONS_FILENAME = "Questions.csv"
-OUTPUT_FILENAME = "AnswersV2.csv"
+_BACKEND_DIR = Path(__file__).resolve().parent.parent
+if str(_BACKEND_DIR) not in sys.path:
+    sys.path.insert(0, str(_BACKEND_DIR))
+
+from app.paths import DATA_DIR, PYBOT_DATA_DIR, ensure_data_and_artifacts_dirs
+
+DEFAULT_INPUT = PYBOT_DATA_DIR / "Answers.csv"
+DEFAULT_OUTPUT = DATA_DIR / "AnswersV2.csv"
 CSV_ENCODING = "latin-1"
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Build AnswersV2.csv from Answers.csv (Preprocessing.ipynb logic)."
-    )
-    parser.add_argument(
-        "--input-dir",
+    p = argparse.ArgumentParser(description="Build AnswersV2.csv from Answers.csv.")
+    p.add_argument(
+        "--input",
         type=Path,
-        required=True,
-        help="Directory containing Questions.csv and Answers.csv.",
+        default=DEFAULT_INPUT,
+        help=f"Path to Answers.csv (default: {DEFAULT_INPUT})",
     )
-    parser.add_argument(
-        "--output-dir",
+    p.add_argument(
+        "--output",
         type=Path,
-        default=None,
-        help=f"Directory for {OUTPUT_FILENAME} (defaults to --input-dir).",
+        default=DEFAULT_OUTPUT,
+        help=f"Output path (default: {DEFAULT_OUTPUT})",
     )
-    return parser.parse_args()
-
-
-def read_csv_checked(path: Path, *, label: str) -> pd.DataFrame:
-    if not path.is_file():
-        raise FileNotFoundError(f"{label}: file not found: {path}")
-
-    try:
-        df = pd.read_csv(path, encoding=CSV_ENCODING)
-    except UnicodeDecodeError as exc:
-        raise RuntimeError(
-            f"{label}: failed to decode {path} with encoding={CSV_ENCODING!r}"
-        ) from exc
-
-    print(f"{label}: loaded {len(df):,} rows, {len(df.columns)} columns from {path}")
-    return df
+    return p.parse_args()
 
 
 def build_answers_v2(answers: pd.DataFrame) -> pd.DataFrame:
@@ -66,50 +52,46 @@ def build_answers_v2(answers: pd.DataFrame) -> pd.DataFrame:
 
 
 def main() -> int:
+    ensure_data_and_artifacts_dirs()
     args = parse_args()
-    input_dir = args.input_dir.resolve()
-    output_dir = (args.output_dir or input_dir).resolve()
+    input_path = args.input.resolve()
+    output_path = args.output.resolve()
 
-    if not input_dir.is_dir():
-        print(f"ERROR: input directory does not exist or is not a directory: {input_dir}", file=sys.stderr)
+    if not input_path.is_file():
+        print(f"ERROR: input file not found: {input_path}", file=sys.stderr)
         return 1
 
     try:
-        output_dir.mkdir(parents=True, exist_ok=True)
+        answers = pd.read_csv(input_path, encoding=CSV_ENCODING)
+    except UnicodeDecodeError as exc:
+        print(
+            f"ERROR: failed to decode {input_path} with encoding={CSV_ENCODING!r}: {exc}",
+            file=sys.stderr,
+        )
+        return 1
     except OSError as exc:
-        print(f"ERROR: cannot create output directory {output_dir}: {exc}", file=sys.stderr)
+        print(f"ERROR: cannot read {input_path}: {exc}", file=sys.stderr)
         return 1
-
-    questions_path = input_dir / QUESTIONS_FILENAME
-    answers_path = input_dir / ANSWERS_FILENAME
-    out_path = output_dir / OUTPUT_FILENAME
-
-    try:
-        _questions = read_csv_checked(questions_path, label="Questions")
-        answers = read_csv_checked(answers_path, label="Answers")
-    except FileNotFoundError as exc:
-        print(f"ERROR: {exc}", file=sys.stderr)
-        return 1
-    except RuntimeError as exc:
-        print(f"ERROR: {exc}", file=sys.stderr)
-        return 1
-
-    if answers.empty:
-        print("WARNING: Answers dataframe is empty; writing empty AnswersV2.csv.", file=sys.stderr)
 
     if "Score" not in answers.columns:
         print("ERROR: Answers.csv must contain a 'Score' column.", file=sys.stderr)
         return 1
 
+    if answers.empty:
+        print("WARNING: Answers.csv is empty; writing empty AnswersV2.csv.", file=sys.stderr)
+
     built = build_answers_v2(answers)
 
     try:
-        built.to_csv(out_path, index=False)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        built.to_csv(output_path, index=False)
     except OSError as exc:
-        print(f"ERROR: failed to write {out_path}: {exc}", file=sys.stderr)
+        print(f"ERROR: cannot write {output_path}: {exc}", file=sys.stderr)
         return 1
 
-    print(f"Wrote {len(built):,} rows to {out_path}")
+    print(f"input:  {input_path}")
+    print(f"output: {output_path}")
+    print(f"rows:   {len(built):,}")
     return 0
 
 

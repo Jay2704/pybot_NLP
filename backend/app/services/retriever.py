@@ -13,7 +13,6 @@ from __future__ import annotations
 
 import logging
 from datetime import date, datetime
-from pathlib import Path
 from typing import Any
 
 import joblib
@@ -22,10 +21,11 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from sklearn.metrics.pairwise import cosine_similarity
 
+from ..paths import ARTIFACTS_DIR, BACKEND_DIR, DATA_DIR
+
 logger = logging.getLogger(__name__)
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
-ARTIFACTS_DIR = REPO_ROOT / "backend" / "artifacts"
+# Re-export for callers that use retriever.ARTIFACTS_DIR / retriever.DATA_DIR
 
 THRESHOLD = 30
 
@@ -42,17 +42,37 @@ def load_artifacts() -> None:
     qv_path = ARTIFACTS_DIR / "question_vectors.pkl"
     df_path = ARTIFACTS_DIR / "chatbot_df.pkl"
 
-    for p in (v_path, qv_path, df_path):
-        if not p.is_file():
-            raise FileNotFoundError(f"Missing artifact: {p}")
+    logger.info("Backend root (resolved): %s", BACKEND_DIR)
+    logger.info("Artifacts directory:      %s", ARTIFACTS_DIR)
+    logger.info("Data directory (reference): %s", DATA_DIR)
 
-    logger.info("Loading artifacts from %s", ARTIFACTS_DIR)
+    required = [
+        ("vectorizer.pkl", v_path),
+        ("question_vectors.pkl", qv_path),
+        ("chatbot_df.pkl", df_path),
+    ]
+    missing = [p for _, p in required if not p.is_file()]
+    if missing:
+        raise RuntimeError(
+            "Missing required retrieval artifact(s). Expected files under backend/artifacts/:\n"
+            + "\n".join(f"  - {p}" for p in missing)
+            + "\n\nResolved paths (from app code location, not process cwd):\n"
+            f"  backend/:      {BACKEND_DIR}\n"
+            f"  backend/artifacts/: {ARTIFACTS_DIR}\n"
+            f"  backend/data/:      {DATA_DIR} (CSV pipeline output; artifacts built by scripts)\n"
+            "Generate artifacts with: backend/scripts/build_retrieval_artifacts.py "
+            "(after build_answers_v2.py and build_final_dataset.py)."
+        )
+
+    for name, path in required:
+        logger.info("Loading artifact: %s -> %s", name, path)
+
     _vectorizer = joblib.load(v_path)
     _question_vectors = joblib.load(qv_path)
     _df = joblib.load(df_path)
     assert _df is not None
     logger.info(
-        "Loaded vectorizer, Question_vectors (shape=%s), df (%s rows)",
+        "Loaded vectorizer, Question_vectors (shape=%s), chatbot_df (%s rows)",
         getattr(_question_vectors, "shape", "?"),
         f"{len(_df):,}",
     )
@@ -100,7 +120,7 @@ def get_answer(row: int, df: pd.DataFrame) -> list:
     Returns [answer[0], answer[2]] from getAnswerWithHighestScore (answer text,
     alternate score), matching the notebook return value.
     """
-    qid = df.iloc[row][0]
+    qid = df.iloc[row, 0]
     answers = df.loc[df["QId"] == qid]
     answer = getAnswerWithHighestScore(answers, df)
     return [answer[0], answer[2]]
@@ -140,7 +160,7 @@ def chatbot_response_for_api(msg: str) -> tuple[Any, Any, int, int]:
     closest = np.argmax(similarities, axis=1)
     row = int(closest[0])
 
-    qid = df.iloc[row][0]
+    qid = df.iloc[row, 0]
     answers = df.loc[df["QId"] == qid]
     triple = getAnswerWithHighestScore(answers, df)
     return triple[0], triple[2], int(qid), int(triple[1])

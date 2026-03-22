@@ -11,8 +11,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .models.schemas import HealthResponse
+from .paths import ensure_data_and_artifacts_dirs
 from .routes import chat
-from .services.retriever import load_artifacts
+from .services import retriever
 
 logging.basicConfig(
     level=logging.INFO,
@@ -23,8 +24,13 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("Startup: loading retrieval artifacts")
-    load_artifacts()
+    ensure_data_and_artifacts_dirs()
+    logger.info(
+        "Startup: loading retrieval artifacts from %s (data dir: %s)",
+        retriever.ARTIFACTS_DIR,
+        retriever.DATA_DIR,
+    )
+    retriever.load_artifacts()
     logger.info("Startup complete")
     yield
     logger.info("Shutdown")
