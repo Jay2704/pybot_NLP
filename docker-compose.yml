@@ -1,0 +1,12 @@
+# Local testing — mirrors Hugging Face Space port (7860). No app logic; image build only.
+# Usage: docker compose up --build
+
+services:
+  pybot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "7860:7860"
+    environment:
+      PORT: "7860"

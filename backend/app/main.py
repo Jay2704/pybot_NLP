@@ -11,8 +11,9 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from .frontend_spa import register_frontend_spa
 from .models.schemas import HealthResponse
-from .paths import ensure_data_and_artifacts_dirs
+from .paths import ensure_data_and_artifacts_dirs, resolve_frontend_dist_dir
 from .routes import chat
 from .services import retriever
 
@@ -23,7 +24,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 def _cors_allow_origins() -> list[str]:
-    """Local dev origins plus optional comma-separated URLs (e.g. Vercel production/preview)."""
+    """Local dev origins plus optional comma-separated production origins (CORS_EXTRA_ORIGINS)."""
     base = [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
@@ -77,3 +78,14 @@ app.include_router(chat.router)
 @app.get("/health", response_model=HealthResponse, tags=["health"])
 async def health():
     return HealthResponse(status="ok")
+
+
+# React SPA after all API routes: /chat, /health, /docs, openapi.json, etc. stay on FastAPI.
+_spa_dir = resolve_frontend_dist_dir()
+if _spa_dir is not None:
+    register_frontend_spa(app, _spa_dir)
+else:
+    logger.warning(
+        "No React build found — API only. Build to frontend/dist or frontend/build, "
+        "or set FRONTEND_DIST_DIR (see app.paths.resolve_frontend_dist_dir).",
+    )

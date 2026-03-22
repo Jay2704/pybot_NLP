@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import logging
 from datetime import date, datetime
+from pathlib import Path
 from typing import Any
 
 import joblib
@@ -21,7 +22,15 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from sklearn.metrics.pairwise import cosine_similarity
 
-from ..paths import ARTIFACTS_DIR, BACKEND_DIR, DATA_DIR
+from ..paths import (
+    ARTIFACTS_DIR,
+    ARTIFACT_CHATBOT_DF_PATH,
+    ARTIFACT_QUESTION_VECTORS_PATH,
+    ARTIFACT_VECTORIZER_PATH,
+    BACKEND_DIR,
+    DATA_DIR,
+    RETRIEVAL_ARTIFACT_FILES,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -38,38 +47,48 @@ def load_artifacts() -> None:
     """Load vectorizer, Question_vectors, and df from backend/artifacts (startup)."""
     global _vectorizer, _question_vectors, _df
 
-    v_path = ARTIFACTS_DIR / "vectorizer.pkl"
-    qv_path = ARTIFACTS_DIR / "question_vectors.pkl"
-    df_path = ARTIFACTS_DIR / "chatbot_df.pkl"
+    backend_root = BACKEND_DIR.resolve()
+    artifacts_root = ARTIFACTS_DIR.resolve()
+    data_root = DATA_DIR.resolve()
 
-    logger.info("Backend root (resolved): %s", BACKEND_DIR)
-    logger.info("Artifacts directory:      %s", ARTIFACTS_DIR)
-    logger.info("Data directory (reference): %s", DATA_DIR)
+    logger.info(
+        "Path anchor: app.paths from %s -> backend root %s (not cwd)",
+        Path(__file__).resolve(),
+        backend_root,
+    )
+    logger.info("Artifacts directory (absolute): %s", artifacts_root)
+    logger.info("Data directory (absolute):     %s", data_root)
+    for logical_name, abs_path in RETRIEVAL_ARTIFACT_FILES:
+        logger.info(
+            "Expected retrieval artifact: %s -> %s",
+            logical_name,
+            abs_path,
+        )
 
-    required = [
-        ("vectorizer.pkl", v_path),
-        ("question_vectors.pkl", qv_path),
-        ("chatbot_df.pkl", df_path),
-    ]
-    missing = [p for _, p in required if not p.is_file()]
+    missing = [(name, p) for name, p in RETRIEVAL_ARTIFACT_FILES if not p.is_file()]
     if missing:
+        lines = "\n".join(f"  - {p}  ({name})" for name, p in missing)
         raise RuntimeError(
-            "Missing required retrieval artifact(s). Expected files under backend/artifacts/:\n"
-            + "\n".join(f"  - {p}" for p in missing)
-            + "\n\nResolved paths (from app code location, not process cwd):\n"
-            f"  backend/:      {BACKEND_DIR}\n"
-            f"  backend/artifacts/: {ARTIFACTS_DIR}\n"
-            f"  backend/data/:      {DATA_DIR} (CSV pipeline output; artifacts built by scripts)\n"
-            "Generate artifacts with: backend/scripts/build_retrieval_artifacts.py "
+            "Missing required retrieval artifact file(s). "
+            "Paths are resolved from backend/app/paths.py (not the process working directory).\n"
+            f"{lines}\n\n"
+            f"backend root:    {backend_root}\n"
+            f"artifacts dir:   {artifacts_root}\n"
+            "Ensure vectorizer.pkl, question_vectors.pkl, and chatbot_df.pkl are present. "
+            "Generate them with: backend/scripts/build_retrieval_artifacts.py "
             "(after build_answers_v2.py and build_final_dataset.py)."
         )
 
-    for name, path in required:
-        logger.info("Loading artifact: %s -> %s", name, path)
+    v_path = ARTIFACT_VECTORIZER_PATH
+    qv_path = ARTIFACT_QUESTION_VECTORS_PATH
+    df_path = ARTIFACT_CHATBOT_DF_PATH
 
-    _vectorizer = joblib.load(v_path)
-    _question_vectors = joblib.load(qv_path)
-    _df = joblib.load(df_path)
+    logger.info("Loading joblib: %s", v_path)
+    _vectorizer = joblib.load(str(v_path))
+    logger.info("Loading joblib: %s", qv_path)
+    _question_vectors = joblib.load(str(qv_path))
+    logger.info("Loading joblib: %s", df_path)
+    _df = joblib.load(str(df_path))
     assert _df is not None
     logger.info(
         "Loaded vectorizer, Question_vectors (shape=%s), chatbot_df (%s rows)",
