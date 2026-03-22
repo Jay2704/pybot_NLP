@@ -5,6 +5,7 @@ FastAPI entrypoint: loads retrieval artifacts at startup (Chatbot-V5.ipynb parit
 from __future__ import annotations
 
 import logging
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -20,6 +21,26 @@ logging.basicConfig(
     format="%(levelname)s: %(name)s: %(message)s",
 )
 logger = logging.getLogger(__name__)
+
+def _cors_allow_origins() -> list[str]:
+    """Local dev origins plus optional comma-separated URLs (e.g. Vercel production/preview)."""
+    base = [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ]
+    extra = os.environ.get("CORS_EXTRA_ORIGINS", "")
+    if not extra.strip():
+        return base
+    more = [o.strip() for o in extra.split(",") if o.strip()]
+    seen: set[str] = set()
+    out: list[str] = []
+    for o in base + more:
+        if o not in seen:
+            seen.add(o)
+            out.append(o)
+    return out
 
 
 @asynccontextmanager
@@ -44,7 +65,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_cors_allow_origins(),
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
