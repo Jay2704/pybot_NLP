@@ -1,6 +1,7 @@
 # --- Data (large / generated) ---
 pybot_data/
 backend/data/
+backend/artifacts/
 
 # --- Python ---
 __pycache__/
