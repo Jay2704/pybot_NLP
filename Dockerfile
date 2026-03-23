@@ -22,6 +22,7 @@ ENV PORT=7860
 COPY backend/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Full backend tree — include backend/artifacts/*.pkl (must be committed to git for HF).
 COPY backend/ ./
 # Matches backend/static/dist resolution in app.paths.resolve_frontend_dist_dir()
 COPY --from=web-build /frontend/dist ./static/dist

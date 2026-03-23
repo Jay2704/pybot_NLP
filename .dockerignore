@@ -30,3 +30,7 @@ Thumbs.db
 **/.ipynb_checkpoints
 .ipynb_checkpoints
 **/*.ipynb
+
+# Retrieval: backend/artifacts/*.pkl MUST stay in the build context — do NOT add:
+#   *.pkl
+#   backend/artifacts/

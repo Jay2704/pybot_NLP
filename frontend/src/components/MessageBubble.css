@@ -14,39 +14,78 @@
 .message-bubble {
   max-width: min(100%, 560px);
   padding: 0.75rem 1rem;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  border-radius: var(--radius, 12px);
+  box-shadow: var(--shadow, 0 1px 3px rgba(15, 23, 42, 0.08));
 }
 
 .message-bubble--user {
-  background: var(--user-bubble);
+  background: var(--user-bubble, #e8f0fe);
   border: 1px solid #c7d9f8;
 }
 
 .message-bubble--bot {
-  background: var(--bot-bubble);
-  border: 1px solid var(--border);
+  background: var(--bot-bubble, #f0f2f4);
+  border: 1px solid var(--border, #e2e6ea);
+}
+
+/* Premium dashboard variant (PyBot chat panel) */
+.message-bubble--dashboard.message-bubble--user {
+  background: linear-gradient(165deg, #eef2ff 0%, #e0e7ff 100%);
+  border: 1px solid rgba(99, 102, 241, 0.22);
+  border-radius: 18px 18px 6px 18px;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
+}
+
+.message-bubble--dashboard.message-bubble--bot {
+  background: #f8fafc;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 18px 18px 18px 6px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+}
+
+.message-bubble__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.4rem;
 }
 
 .message-bubble__label {
   font-size: 0.7rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--text-muted);
-  margin-bottom: 0.35rem;
+  letter-spacing: 0.05em;
+  color: var(--text-muted, #5c6570);
+}
+
+.message-bubble--dashboard .message-bubble__label {
+  color: #6366f1;
+}
+
+.message-bubble__time {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: #94a3b8;
+  white-space: nowrap;
 }
 
 .message-bubble__text {
   white-space: pre-wrap;
   word-break: break-word;
   font-size: 0.95rem;
+  line-height: 1.55;
+  color: #1e293b;
 }
 
 .message-bubble__meta {
   margin-top: 0.6rem;
   padding-top: 0.5rem;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border, #e2e6ea);
   font-size: 0.75rem;
-  color: var(--text-muted);
+  color: var(--text-muted, #5c6570);
+}
+
+.message-bubble--dashboard .message-bubble__meta {
+  border-top-color: rgba(15, 23, 42, 0.08);
 }

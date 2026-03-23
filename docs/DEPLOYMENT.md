@@ -21,7 +21,7 @@ If you host the static UI and the API separately (not the default for this repo)
 1. Set **`VITE_API_URL`** at the **frontend build** to the public API origin (no trailing slash).
 2. On the API, set **`CORS_EXTRA_ORIGINS`** to every origin that serves the UI (scheme + host + port). Local dev origins are already listed in `backend/app/main.py`.
 
-The frontend client is **`frontend/src/services/api.js`** — `VITE_API_URL` overrides relative `/chat` when set.
+The frontend client is **`frontend/src/services/api.js`** — `VITE_API_URL` overrides same-origin API calls when set.
 
 ---
 

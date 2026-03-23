@@ -44,15 +44,6 @@ docker stop pybot-hf && docker rm pybot-hf
 2. Confirm the chat UI loads.  
 3. Send a message and verify a reply.
 
-Optional API checks in another terminal:
-
-```bash
-curl -s http://127.0.0.1:7860/health
-curl -s -X POST http://127.0.0.1:7860/chat \
-  -H 'Content-Type: application/json' \
-  -d '{"message":"What is a list comprehension in Python?"}'
-```
-
 ---
 
 ## Optional: Docker Compose (same behavior)
@@ -78,6 +69,6 @@ docker compose down
 | Issue | What to check |
 |--------|----------------|
 | Build fails | Run from repo root; ensure `frontend/package-lock.json` exists. |
-| 500 on `/chat` | Image may lack `backend/artifacts` or `backend/data`; confirm they are not excluded and are committed or copied into the context. |
+| 500 when sending chat | Image may lack `backend/artifacts` or `backend/data`; confirm they are not excluded and are committed or copied into the context. |
 | Blank page | Confirm `backend/static/dist` was produced in the image (Dockerfile copies Vite `dist` there). |
 | Port in use | Change host mapping: `-p 8080:7860` and open `http://127.0.0.1:8080/`. |

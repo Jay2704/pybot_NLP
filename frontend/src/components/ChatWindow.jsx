@@ -1,75 +1,20 @@
-import { useState, useCallback, useRef, useEffect } from "react";
 import MessageBubble from "./MessageBubble.jsx";
 import SampleQuestions from "./SampleQuestions.jsx";
-import { sendChatMessage, ChatApiError } from "../services/api.js";
+import { useChatSession } from "../hooks/useChatSession.js";
 import "./ChatWindow.css";
 
-function createId() {
-  return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-}
-
 export default function ChatWindow() {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const bottomRef = useRef(null);
-
-  const scrollToBottom = useCallback(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, []);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, loading, scrollToBottom]);
-
-  const appendUser = (text) => {
-    setMessages((prev) => [...prev, { id: createId(), role: "user", text }]);
-  };
-
-  const appendBot = (text, meta) => {
-    setMessages((prev) => [...prev, { id: createId(), role: "bot", text, meta }]);
-  };
-
-  const runSend = async (rawText) => {
-    const text = rawText.trim();
-    if (!text || loading) return;
-
-    setError(null);
-    appendUser(text);
-    setInput("");
-    setLoading(true);
-
-    try {
-      const data = await sendChatMessage(text);
-      appendBot(data.answer, {
-        qid: data.qid,
-        aid: data.aid,
-        alternate: data.alternate,
-      });
-    } catch (e) {
-      const msg =
-        e instanceof ChatApiError
-          ? e.message
-          : e instanceof Error
-            ? e.message
-            : "Something went wrong";
-      setError(msg);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    runSend(input);
-  };
-
-  const handleClear = () => {
-    setMessages([]);
-    setError(null);
-    setInput("");
-  };
+  const {
+    messages,
+    input,
+    setInput,
+    loading,
+    error,
+    runSend,
+    handleSubmit,
+    handleClear,
+    bottomRef,
+  } = useChatSession();
 
   return (
     <div className="chat-window">

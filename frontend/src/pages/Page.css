@@ -1,0 +1,37 @@
+.page {
+  padding: 2rem 1.25rem 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page--chat {
+  max-width: 760px;
+}
+
+.page--narrow {
+  max-width: 480px;
+}
+
+.page__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+}
+
+.page__lead {
+  margin: 0 0 1.5rem;
+  font-size: 1rem;
+  color: #64748b;
+  line-height: 1.6;
+  max-width: 42rem;
+}
+
+.page__card {
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}

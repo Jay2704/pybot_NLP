@@ -4,25 +4,13 @@ Assumes the container is running with **host port 7860** mapped to the app (e.g.
 
 ---
 
-## 1. API — copy/paste
+## 1. App behavior — browser
 
-**Health**
+1. Open **http://127.0.0.1:7860/** (or your mapped host/port).
+2. Navigate to the **chat** experience and send a short Python question.
+3. **Verify:** You get a **200**-equivalent success in the UI: a bot reply with answer-style content (no HTML error page, no endless spinner).
 
-```bash
-curl -sS http://127.0.0.1:7860/health
-```
-
-**Verify:** JSON includes `"status":"ok"` (or your `HealthResponse` shape).
-
-**Chat**
-
-```bash
-curl -sS -X POST http://127.0.0.1:7860/chat \
-  -H 'Content-Type: application/json' \
-  -d '{"message":"What is list comprehension in Python?"}'
-```
-
-**Verify:** HTTP **200**; JSON has **`answer`** (string), **`alternate`**, **`qid`**, **`aid`** (numbers). No HTML error page.
+Use DevTools **Network** only to confirm requests stay **same-origin** for a single-container deploy (no unexpected cross-origin failures).
 
 ---
 
@@ -34,7 +22,7 @@ curl -sS -X POST http://127.0.0.1:7860/chat \
 | Chat | Send a message → user bubble + bot reply appear |
 | Loading | Brief loading state, then clears; no stuck spinner |
 | Error UX | If you break the API (stop container), UI shows a clear error (not silent failure) |
-| Same origin | No CORS errors in DevTools **Network** for `POST /chat` (single-container deploy) |
+| Same origin | No CORS errors in DevTools **Network** for chat traffic (single-container deploy) |
 
 ---
 
@@ -52,12 +40,12 @@ Ask these one at a time; expect a coherent, on-topic **answer** text each time.
 
 ## 4. Recruiter-demo readiness (green flags)
 
-- **`/health`** and **`/chat`** succeed with the commands above.
+- Chat sends and receives successfully in the browser after the container is up.
 - UI is readable, responsive enough for a live walkthrough, no obvious layout bugs.
 - Responses relate to the question (retrieval working); no 500s under normal use.
 - You can explain in one sentence: **TF-IDF + cosine similarity** over **Stack Overflow–style data**, **FastAPI** API, **React** UI, **one Docker** image.
 
-**Optional polish:** Open **`/docs`** if you want to show OpenAPI during the demo.
+**Optional polish:** If your deployment exposes interactive API docs from FastAPI, you can show them during the demo.
 
 ---
 

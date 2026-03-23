@@ -1,0 +1,18 @@
+.doc-card__body {
+  flex: 1;
+  color: #475569;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+
+.doc-card__body > p:first-child {
+  margin-top: 0;
+}
+
+.doc-card__body p {
+  margin: 0 0 1rem;
+}
+
+.doc-card__body p:last-child {
+  margin-bottom: 0;
+}

@@ -1,13 +1,13 @@
 /**
- * FastAPI chat client — POST /chat (body: { message }).
- * Response shape: { answer, alternate, qid, aid }.
+ * FastAPI chat client (JSON chat request with a message field).
+ * Response fields used by the UI include answer text and retrieval metadata.
  *
  * Base URL resolution (no chatbot logic here):
  * - If VITE_API_URL is set → use it (cross-origin: separate frontend + API).
  * - Otherwise → "" (relative URLs: same origin as the page — Hugging Face Space, Docker, etc.).
  *
- * Local dev: leave VITE_API_URL unset and run `npm run dev` with Vite proxying /chat to FastAPI
- * (see vite.config.js), or set VITE_API_URL to your API if you prefer direct calls + CORS.
+ * Local dev: leave VITE_API_URL unset and run `npm run dev` with Vite proxying API routes to
+ * FastAPI (see vite.config.js), or set VITE_API_URL if you prefer direct calls + CORS.
  */
 
 function getApiBase() {

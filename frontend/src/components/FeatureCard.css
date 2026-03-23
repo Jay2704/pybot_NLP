@@ -1,0 +1,14 @@
+.feature-card__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+
+.feature-card__description {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: #64748b;
+}

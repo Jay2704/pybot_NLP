@@ -1,0 +1,120 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.navbar__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, auto);
+  align-items: center;
+  gap: 1rem;
+}
+
+.navbar__brand {
+  font-weight: 700;
+  font-size: 1.125rem;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--duration-normal) var(--ease-standard);
+  border-radius: 8px;
+}
+
+.navbar__brand:hover {
+  color: #6366f1;
+}
+
+.navbar__brand:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+.navbar__links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
+}
+
+.navbar__link {
+  display: inline-block;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #475569;
+  text-decoration: none;
+  border-radius: 9999px;
+  transition:
+    color var(--duration-normal) var(--ease-standard),
+    background var(--duration-normal) var(--ease-standard),
+    box-shadow var(--duration-normal) var(--ease-standard);
+}
+
+.navbar__link:hover {
+  color: #0f172a;
+  background: rgba(15, 23, 42, 0.05);
+}
+
+.navbar__link:focus-visible {
+  box-shadow: var(--focus-ring);
+  outline: none;
+}
+
+.navbar__link--active {
+  color: #4f46e5;
+  font-weight: 600;
+  background: rgba(99, 102, 241, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.2);
+}
+
+.navbar__link--active:hover {
+  color: #4338ca;
+  background: rgba(99, 102, 241, 0.16);
+}
+
+.navbar__cta {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .navbar__inner {
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    padding: 0.75rem 1rem;
+    min-height: unset;
+  }
+
+  .navbar__brand {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .navbar__cta {
+    grid-column: 2;
+    grid-row: 1;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .navbar__links {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: center;
+    padding-top: 0.25rem;
+    border-top: 1px solid rgba(15, 23, 42, 0.06);
+    margin-top: 0.25rem;
+    padding-top: 0.75rem;
+  }
+}

@@ -13,7 +13,15 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .frontend_spa import register_frontend_spa
 from .models.schemas import HealthResponse
-from .paths import ensure_data_and_artifacts_dirs, resolve_frontend_dist_dir
+from .paths import (
+    ARTIFACTS_DIR,
+    ARTIFACT_CHATBOT_DF_PATH,
+    ARTIFACT_QUESTION_VECTORS_PATH,
+    ARTIFACT_VECTORIZER_PATH,
+    BACKEND_DIR,
+    ensure_data_and_artifacts_dirs,
+    resolve_frontend_dist_dir,
+)
 from .routes import chat
 from .services import retriever
 
@@ -22,6 +30,32 @@ logging.basicConfig(
     format="%(levelname)s: %(name)s: %(message)s",
 )
 logger = logging.getLogger(__name__)
+
+
+def _log_artifact_filesystem_probe() -> None:
+    """Deployment diagnostics only — does not change retrieval behavior."""
+    root = BACKEND_DIR.resolve()
+    art = ARTIFACTS_DIR.resolve()
+    logger.info("Deploy probe: BACKEND_DIR=%s", root)
+    logger.info("Deploy probe: ARTIFACTS_DIR=%s exists=%s", art, art.is_dir())
+    if art.is_dir():
+        try:
+            names = sorted(p.name for p in art.iterdir() if p.is_file())
+            logger.info("Deploy probe: artifact directory file names: %s", names)
+        except OSError as e:
+            logger.warning("Deploy probe: could not list artifact directory: %s", e)
+    for label, path in (
+        ("vectorizer.pkl", ARTIFACT_VECTORIZER_PATH),
+        ("question_vectors.pkl", ARTIFACT_QUESTION_VECTORS_PATH),
+        ("chatbot_df.pkl", ARTIFACT_CHATBOT_DF_PATH),
+    ):
+        try:
+            exists = path.is_file()
+            size = path.stat().st_size if exists else None
+            logger.info("Deploy probe: %s path=%s exists=%s bytes=%s", label, path, exists, size)
+        except OSError as e:
+            logger.warning("Deploy probe: %s stat failed: %s", label, e)
+
 
 def _cors_allow_origins() -> list[str]:
     """Local dev origins plus optional comma-separated production origins (CORS_EXTRA_ORIGINS)."""
@@ -47,6 +81,7 @@ def _cors_allow_origins() -> list[str]:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     ensure_data_and_artifacts_dirs()
+    _log_artifact_filesystem_probe()
     logger.info(
         "Startup: loading retrieval artifacts from %s (data dir: %s)",
         retriever.ARTIFACTS_DIR,

@@ -1,0 +1,39 @@
+.ui-icon-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ui-icon-badge--sm {
+  width: 2.25rem;
+  height: 2.25rem;
+  font-size: 1rem;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(124, 58, 237, 0.1) 100%);
+  color: #4f46e5;
+}
+
+.ui-icon-badge--md {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+  line-height: 1;
+  background: linear-gradient(145deg, rgba(99, 102, 241, 0.16) 0%, rgba(124, 58, 237, 0.1) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 50%;
+  color: #4f46e5;
+}
+
+.ui-icon-badge--lg {
+  width: 3.25rem;
+  height: 3.25rem;
+  margin-bottom: 1.25rem;
+  font-size: 1.35rem;
+  line-height: 1;
+  background: linear-gradient(145deg, rgba(99, 102, 241, 0.14) 0%, rgba(124, 58, 237, 0.1) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.18);
+  border-radius: 50%;
+  color: #4f46e5;
+}

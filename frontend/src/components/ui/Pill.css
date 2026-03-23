@@ -1,0 +1,152 @@
+.ui-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  font: inherit;
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+  border: none;
+  background: transparent;
+}
+
+.ui-pill--indigo {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-semibold);
+  color: #4338ca;
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: var(--radius-pill);
+  transition:
+    background var(--duration-normal) var(--ease-standard),
+    border-color var(--duration-normal) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+}
+
+.ui-pill--indigo:hover {
+  background: rgba(99, 102, 241, 0.12);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.ui-pill--badge {
+  padding: 0.35rem 0.85rem;
+  margin-bottom: var(--space-5);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-wide);
+  text-transform: uppercase;
+  color: #4f46e5;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: var(--radius-pill);
+}
+
+.ui-pill--suggestion {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-family: inherit;
+  color: #4338ca;
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition:
+    background var(--duration-normal) var(--ease-standard),
+    border-color var(--duration-normal) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-normal) var(--ease-standard);
+}
+
+.ui-pill--suggestion:hover:not(:disabled) {
+  background: rgba(99, 102, 241, 0.16);
+  border-color: rgba(99, 102, 241, 0.32);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.15);
+}
+
+.ui-pill--suggestion:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.ui-pill--suggestion:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.ui-pill--suggestion:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ui-pill--topic {
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-family: inherit;
+  color: #334155;
+  background: #f8fafc;
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition:
+    background var(--duration-normal) var(--ease-standard),
+    border-color var(--duration-normal) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-normal) var(--ease-standard);
+}
+
+.ui-pill--topic:hover:not(:disabled) {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: rgba(99, 102, 241, 0.38);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.12);
+}
+
+.ui-pill--topic:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.ui-pill--topic:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.ui-pill--topic:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Same look as topic chips, non-interactive (sidebar labels, etc.) */
+.ui-pill--topic-label {
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #334155;
+  background: #f8fafc;
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: var(--radius-pill);
+  cursor: default;
+  user-select: none;
+}
+
+.ui-pill--marketing {
+  display: inline-flex;
+  padding: 0.35rem 0.75rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #4f46e5;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: var(--radius-pill);
+}

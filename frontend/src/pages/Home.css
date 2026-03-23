@@ -1,0 +1,220 @@
+.home {
+  --home-max: 1180px;
+  padding: 2.5rem 1.25rem 4rem;
+  max-width: var(--home-max);
+  margin: 0 auto;
+}
+
+.home__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+.home__title {
+  margin: 0 0 1.25rem;
+  font-size: clamp(2.25rem, 4.5vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  color: #0f172a;
+}
+
+.home__highlight {
+  color: #6366f1;
+  background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.home__sub {
+  margin: 0 0 2rem;
+  max-width: 32rem;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: #64748b;
+}
+
+.home__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+}
+
+/* Preview card */
+.home__preview {
+  position: relative;
+}
+
+.home__preview::before {
+  content: "";
+  position: absolute;
+  inset: -8% -6% auto -6%;
+  height: 60%;
+  background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.home__preview-card {
+  position: relative;
+  z-index: 1;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 16px;
+  padding: 1.25rem 1.35rem;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.05),
+    0 12px 40px rgba(15, 23, 42, 0.08);
+  transition:
+    transform var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out),
+    border-color var(--duration-normal) var(--ease-standard);
+}
+
+@media (hover: hover) {
+  .home__preview:hover .home__preview-card {
+    transform: translateY(-4px);
+    border-color: rgba(99, 102, 241, 0.18);
+    box-shadow:
+      0 4px 16px rgba(15, 23, 42, 0.08),
+      0 24px 56px rgba(99, 102, 241, 0.12);
+  }
+}
+
+.home__mock-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.home__mock-dots {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.home__mock-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e2e8f0;
+}
+
+.home__mock-dots span:first-child {
+  background: #fca5a5;
+}
+
+.home__mock-dots span:nth-child(2) {
+  background: #fcd34d;
+}
+
+.home__mock-dots span:nth-child(3) {
+  background: #86efac;
+}
+
+.home__mock-title {
+  flex: 1;
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.home__mock-msg {
+  margin-bottom: 0.75rem;
+}
+
+.home__mock-msg--user {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.home__mock-bubble {
+  max-width: 92%;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  border-radius: 12px;
+}
+
+.home__mock-bubble--user {
+  background: linear-gradient(180deg, #eef2ff 0%, #e0e7ff 100%);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  color: #1e1b4b;
+}
+
+.home__mock-bubble--bot {
+  background: #f8fafc;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  color: #334155;
+}
+
+.home__mock-code {
+  margin: 0.65rem 0 0;
+  padding: 0.65rem 0.75rem;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: #0f172a;
+  background: #f1f5f9;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.home__mock-source {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.75rem;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #64748b;
+  background: rgba(241, 245, 249, 0.9);
+  border-radius: 6px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+@media (max-width: 960px) {
+  .home__hero {
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 5vw, 2.75rem);
+  }
+
+  .home__preview {
+    max-width: 520px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 960px) {
+  .home {
+    padding: 2.25rem clamp(1rem, 4vw, 1.5rem) 3.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .home {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .home__ctas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .home__ctas .ui-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

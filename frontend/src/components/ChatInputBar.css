@@ -1,0 +1,86 @@
+.chat-input-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.65rem;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 9999px;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+  transition:
+    border-color var(--duration-normal) var(--ease-standard),
+    box-shadow var(--duration-normal) var(--ease-standard);
+}
+
+.chat-input-bar:focus-within {
+  border-color: rgba(99, 102, 241, 0.45);
+  box-shadow:
+    0 0 0 3px rgba(99, 102, 241, 0.12),
+    0 4px 22px rgba(15, 23, 42, 0.08);
+}
+
+.chat-input-bar__field {
+  flex: 1;
+  min-width: 0;
+  padding: 0.65rem 0.65rem 0.65rem 0.85rem;
+  font-size: 0.9375rem;
+  border: none;
+  background: transparent;
+  color: #0f172a;
+}
+
+.chat-input-bar__field:focus {
+  outline: none;
+}
+
+.chat-input-bar__field::placeholder {
+  color: #94a3b8;
+  transition: opacity var(--duration-normal) var(--ease-standard);
+}
+
+.chat-input-bar:focus-within .chat-input-bar__field::placeholder {
+  opacity: 0.75;
+}
+
+.chat-input-bar__field:disabled {
+  opacity: 0.6;
+}
+
+.chat-input-bar__send {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  color: #ffffff;
+  background: linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);
+  transition:
+    filter var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-spring),
+    box-shadow var(--duration-normal) var(--ease-standard);
+}
+
+.chat-input-bar__send:hover:not(:disabled) {
+  filter: brightness(1.08);
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.45);
+}
+
+.chat-input-bar__send:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.chat-input-bar__send:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring), 0 2px 8px rgba(79, 70, 229, 0.35);
+}
+
+.chat-input-bar__send:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

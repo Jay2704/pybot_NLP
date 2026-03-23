@@ -1,7 +1,9 @@
 # --- Data (large / generated) ---
 pybot_data/
 backend/data/
-backend/artifacts/
+# Artifacts: ignore everything in this folder except committed .pkl files (HF Docker deploy).
+backend/artifacts/*
+!backend/artifacts/*.pkl
 
 # --- Python ---
 __pycache__/

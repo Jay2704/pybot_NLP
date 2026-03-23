@@ -57,16 +57,9 @@ Optional full smoke (loads artifacts):
 cd backend && uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-In another terminal:
+In another terminal (or the same machine), **open the app in a browser** (integrated dev setup below) and send a test message in chat.
 
-```bash
-curl -s http://127.0.0.1:8000/health
-curl -s -X POST http://127.0.0.1:8000/chat \
-  -H 'Content-Type: application/json' \
-  -d '{"message":"What is a list comprehension in Python?"}'
-```
-
-**Pass:** `GET /health` returns JSON with `"status":"ok"`. `POST /chat` returns JSON with `answer`, `alternate`, `qid`, `aid`. Stop uvicorn with Ctrl+C.
+**Pass:** Health and chat behavior look correct from the UI (successful reply payload in the chat thread). Stop uvicorn with Ctrl+C when done.
 
 ---
 
@@ -130,17 +123,8 @@ Run (maps HF-style port):
 docker run --rm -p 7860:7860 pybot-hf-test
 ```
 
-Smoke:
-
-```bash
-curl -s http://127.0.0.1:7860/health
-curl -s -X POST http://127.0.0.1:7860/chat \
-  -H 'Content-Type: application/json' \
-  -d '{"message":"test"}'
-```
-
-Open `http://127.0.0.1:7860/` in a browser — UI should load; send one chat.  
-**Pass:** Build succeeds; container stays up; health + chat + UI OK.  
+Open `http://127.0.0.1:7860/` in a browser — UI should load; send one chat and confirm a reply.  
+**Pass:** Build succeeds; container stays up; UI and chat flow OK.  
 **Remind:** Image must include `backend/data` and `backend/artifacts` if those directories are in the build context (not excluded by `.dockerignore`).
 
 ---

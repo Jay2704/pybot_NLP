@@ -1,0 +1,229 @@
+/* Shared auth form blocks (Login + Signup) */
+
+.auth-form-card {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.auth-form-card__title {
+  margin: 0 0 0.35rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+}
+
+.auth-form-card__subtitle {
+  margin: 0 0 1.5rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.auth-social {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 1.25rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #94a3b8;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(15, 23, 42, 0.1);
+}
+
+.auth-field {
+  margin-bottom: 1rem;
+}
+
+.auth-field__label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.auth-field__input {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.9375rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 10px;
+  background: #fafafa;
+  color: #0f172a;
+  transition:
+    border-color var(--duration-normal) var(--ease-standard),
+    box-shadow var(--duration-normal) var(--ease-standard),
+    background var(--duration-normal) var(--ease-standard);
+}
+
+.auth-field__input:hover:not(:focus) {
+  border-color: rgba(15, 23, 42, 0.18);
+}
+
+.auth-field__input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  background: #fff;
+}
+
+.auth-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.auth-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8125rem;
+  color: #475569;
+  cursor: pointer;
+}
+
+.auth-checkbox input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: #6366f1;
+}
+
+.auth-link {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #6366f1;
+  text-decoration: none;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
+.auth-footer-link {
+  margin-top: 1.25rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.auth-footer-link a {
+  font-weight: 600;
+  color: #6366f1;
+  text-decoration: none;
+}
+
+.auth-footer-link a:hover {
+  text-decoration: underline;
+}
+
+/* Marketing column */
+.auth-mkt__title {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.5rem, 2.5vw, 1.85rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+}
+
+.auth-mkt__highlight {
+  background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-mkt__lead {
+  margin: 0 0 1.5rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: #64748b;
+}
+
+.auth-mkt__list {
+  margin: 0 0 1.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.auth-mkt__list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin-bottom: 0.85rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #475569;
+}
+
+.auth-mkt__list li:last-child {
+  margin-bottom: 0;
+}
+
+.auth-mkt__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  font-size: 0.75rem;
+  color: #6366f1;
+  background: rgba(99, 102, 241, 0.12);
+  border-radius: 8px;
+}
+
+.auth-mkt__quote {
+  padding: 1rem 1.1rem;
+  background: #ffffff;
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.08);
+  transition:
+    box-shadow var(--duration-normal) var(--ease-standard),
+    transform var(--duration-normal) var(--ease-standard),
+    border-color var(--duration-normal) var(--ease-standard);
+}
+
+@media (hover: hover) {
+  .auth-mkt__quote:hover {
+    box-shadow: 0 6px 22px rgba(99, 102, 241, 0.14);
+    transform: translateY(-1px);
+    border-color: rgba(99, 102, 241, 0.22);
+  }
+}
+
+.auth-mkt__quote p {
+  margin: 0 0 0.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: #475569;
+  font-style: italic;
+}
+
+.auth-mkt__quote cite {
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-style: normal;
+  color: #6366f1;
+}
