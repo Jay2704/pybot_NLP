@@ -1,0 +1,31 @@
+.profile-avatar {
+  display: block;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid rgba(99, 102, 241, 0.28);
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.12);
+  background: linear-gradient(145deg, rgba(99, 102, 241, 0.12) 0%, rgba(124, 58, 237, 0.08) 100%);
+}
+
+.profile-avatar--sm {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.profile-avatar--md {
+  width: 7rem;
+  height: 7rem;
+}
+
+.profile-avatar--lg {
+  width: 10rem;
+  height: 10rem;
+  border-width: 3px;
+}
+
+@media (max-width: 640px) {
+  .profile-avatar--lg {
+    width: 8.5rem;
+    height: 8.5rem;
+  }
+}

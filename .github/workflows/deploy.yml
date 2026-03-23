@@ -1,0 +1,72 @@
+# Build the Vite app in `frontend/` and deploy `frontend/dist` to GitHub Pages (project site).
+# Backend is deployed separately — set Actions variable or secret VITE_API_URL to the live API origin.
+
+name: Deploy frontend to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "frontend/**"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Check VITE_API_URL
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL || secrets.VITE_API_URL }}
+        run: |
+          if [ -z "$VITE_API_URL" ]; then
+            echo "::error::Set repository variable or secret VITE_API_URL to your live FastAPI origin (HTTPS, no trailing slash)."
+            exit 1
+          fi
+
+      - name: Install and build
+        working-directory: frontend
+        env:
+          # Must match project site path: https://jay2704.github.io/pybot_NLP/
+          VITE_BASE: /pybot_NLP/
+          VITE_API_URL: ${{ vars.VITE_API_URL || secrets.VITE_API_URL }}
+        run: |
+          npm ci
+          npm run build
+
+      - name: GitHub Pages SPA fallbacks
+        working-directory: frontend/dist
+        run: |
+          touch .nojekyll
+          cp index.html 404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

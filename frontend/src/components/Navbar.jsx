@@ -26,6 +26,9 @@ export default function Navbar() {
           <NavLink to="/docs" className={navClass}>
             Docs
           </NavLink>
+          <NavLink to="/about" className={navClass}>
+            About
+          </NavLink>
         </nav>
 
         <div className="navbar__cta">

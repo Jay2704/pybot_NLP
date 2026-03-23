@@ -1,0 +1,98 @@
+.about-page {
+  width: 100%;
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1.25rem, 4vw, 2rem) clamp(3rem, 8vw, 4rem);
+}
+
+.about-page__inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.about-page__header {
+  margin-bottom: 2.25rem;
+  text-align: center;
+}
+
+.about-page__title {
+  margin: 0 0 0.65rem;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+}
+
+.about-page__subtitle {
+  margin: 0 auto;
+  max-width: 36rem;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: #64748b;
+}
+
+.about-developer {
+  display: grid;
+  grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+  gap: clamp(1.75rem, 4vw, 2.75rem);
+  align-items: start;
+  padding: clamp(1.75rem, 4vw, 2.5rem);
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  border-radius: 20px;
+  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
+}
+
+.about-developer__media {
+  display: flex;
+  justify-content: center;
+}
+
+.about-developer__name {
+  margin: 0 0 0.35rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+
+.about-developer__title {
+  margin: 0 0 1.15rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #6366f1;
+}
+
+.about-developer__bio {
+  margin-bottom: 1.5rem;
+}
+
+.about-developer__bio p {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: #475569;
+}
+
+.about-developer__bio p:last-child {
+  margin-bottom: 0;
+}
+
+.about-developer__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+@media (max-width: 720px) {
+  .about-developer {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .about-developer__media {
+    justify-content: center;
+  }
+
+  .about-developer__actions {
+    justify-content: center;
+  }
+}

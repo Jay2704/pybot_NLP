@@ -6,6 +6,8 @@ This repo is set up for a **single Docker Space**: one container runs **FastAPI*
 |--------|-----|
 | Space layout, files, troubleshooting | **`docs/HF_SPACE.md`** |
 | Local Docker build & run | **`docs/DOCKER_LOCAL.md`** |
+| **Frontend-only workflow (dev, test, HF push, verify)** | **`docs/FRONTEND_DEPLOY_HF.md`** |
+| **GitHub Pages (static frontend + remote API)** | **`docs/GITHUB_PAGES.md`** |
 | Pre-push checklist | **`docs/PRE_DEPLOY_CHECKLIST.md`** |
 
 **Entrypoints:** root **`Dockerfile`**, **`docker/entrypoint.sh`**, **`docker-compose.yml`** (local testing only).

@@ -9,3 +9,36 @@
   flex: 1;
   width: 100%;
 }
+
+.app-shell__footer {
+  flex-shrink: 0;
+  padding: 1.25rem 1.5rem 1.75rem;
+  text-align: center;
+  border-top: 1px solid rgba(15, 23, 42, 0.06);
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.6) 0%, #f1f5f9 100%);
+}
+
+.app-shell__footer-line {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.app-shell__footer-dot {
+  color: #cbd5e1;
+}
+
+.app-shell__footer-link {
+  font-weight: 600;
+  color: #6366f1;
+  text-decoration: none;
+  transition:
+    color var(--duration-normal) var(--ease-standard),
+    text-decoration-color var(--duration-normal) var(--ease-standard);
+}
+
+.app-shell__footer-link:hover {
+  color: #4f46e5;
+  text-decoration: underline;
+  text-decoration-color: rgba(79, 70, 229, 0.45);
+}

@@ -2,12 +2,16 @@
  * FastAPI chat client (JSON chat request with a message field).
  * Response fields used by the UI include answer text and retrieval metadata.
  *
- * Base URL resolution (no chatbot logic here):
- * - If VITE_API_URL is set → use it (cross-origin: separate frontend + API).
- * - Otherwise → "" (relative URLs: same origin as the page — Hugging Face Space, Docker, etc.).
+ * **Production build for GitHub Pages:** set `VITE_API_URL` to your live API origin (HTTPS, no
+ * trailing slash) in CI — see repository variable `VITE_API_URL` in `.github/workflows/deploy.yml`.
+ * Add `https://jay2704.github.io` (and optionally the full app path) to backend CORS.
  *
- * Local dev: leave VITE_API_URL unset and run `npm run dev` with Vite proxying API routes to
- * FastAPI (see vite.config.js), or set VITE_API_URL if you prefer direct calls + CORS.
+ * **Same-origin deploys (e.g. Hugging Face Docker serving API + static):** leave `VITE_API_URL`
+ * unset — requests use relative `/chat` on the current origin.
+ *
+ * **Local development:** leave `VITE_API_URL` unset and use `npm run dev` so the Vite dev server
+ * proxies `/chat` to your local FastAPI (`VITE_DEV_PROXY_TARGET`, default `http://127.0.0.1:8000`).
+ * Or set `VITE_API_URL` in `.env.local` to call a remote API directly.
  */
 
 function getApiBase() {
@@ -115,7 +119,9 @@ export async function sendChatMessage(message) {
   } catch (err) {
     const hint =
       API_BASE === ""
-        ? "same-origin API (is the backend running, or Vite dev proxy configured?)"
+        ? import.meta.env.DEV
+          ? "dev server proxy — is FastAPI running, or set VITE_DEV_PROXY_TARGET / VITE_API_URL?"
+          : "set VITE_API_URL at build time for static hosting (GitHub Pages), or use a same-origin API"
         : `API at ${API_BASE}`;
     const msg =
       err instanceof TypeError && err.message === "Failed to fetch"
